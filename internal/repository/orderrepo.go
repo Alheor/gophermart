@@ -123,11 +123,10 @@ func (or *OrderRepository) ChangeOrder(ctx context.Context, order *entity.Accrua
 
 	tx, err := or.Conn.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
-
 		logger.GetLogger().Error(`Change order error1: ` + err.Error())
 		return err
 	}
-
+	logger.GetLogger().Error(`Change order error2: `)
 	if order.Accrual > 0 {
 		_, err = or.Conn.Exec(ctx,
 			`UPDATE "order" SET status = @status, accrual = @accrual WHERE order_number = @order_number;`,
