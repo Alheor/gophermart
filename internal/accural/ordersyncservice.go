@@ -32,6 +32,7 @@ func Init() {
 			cancel()
 
 			go syncOrder(ctx, s)
+
 			time.Sleep(1 * time.Second)
 		}
 	}()
