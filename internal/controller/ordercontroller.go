@@ -7,6 +7,7 @@ import (
 	"github.com/Alheor/gophermart/internal/accural"
 	"github.com/Alheor/gophermart/internal/auth"
 	"github.com/Alheor/gophermart/internal/entity"
+	"github.com/Alheor/gophermart/internal/logger"
 	"github.com/Alheor/gophermart/internal/repository"
 	"github.com/Alheor/gophermart/internal/request"
 	"github.com/Alheor/gophermart/internal/response"
@@ -54,13 +55,14 @@ func AddUserOrder(w http.ResponseWriter, r *http.Request) {
 
 func GetUserOrders(w http.ResponseWriter, r *http.Request) {
 
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
 
 	list, err := repository.GetOrderRepository().GetOrders(ctx, user)
 	if err != nil {
+		logger.GetLogger().Error(`Get orders error: ` + err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
