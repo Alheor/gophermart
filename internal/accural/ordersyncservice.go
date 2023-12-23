@@ -28,10 +28,8 @@ func Init() {
 		for {
 			s := <-ss.SyncChan
 
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
+			ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
-			println(s)
 			go syncOrder(ctx, s)
 			time.Sleep(1 * time.Second)
 		}
@@ -43,21 +41,21 @@ func Init() {
 	loadFromBD(ctx)
 }
 
-func Sync(orderId string) {
-	ss.SyncChan <- orderId
+func Sync(orderID string) {
+	ss.SyncChan <- orderID
 }
 
-func syncOrder(ctx context.Context, orderId string) {
-	data, err := connector.getOrderData(orderId)
+func syncOrder(ctx context.Context, orderID string) {
+	data, err := connector.getOrderData(orderID)
 
 	if err != nil {
 		logger.GetLogger().Error(`Order sync error: ` + err.Error())
-		ss.SyncChan <- orderId
+		ss.SyncChan <- orderID
 		return
 	}
 
 	if data.Status != StatusProcessed && data.Status != StatusInvalid {
-		ss.SyncChan <- orderId
+		ss.SyncChan <- orderID
 	}
 
 	err = repository.GetOrderRepository().ChangeOrder(ctx, data)

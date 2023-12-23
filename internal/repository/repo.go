@@ -28,7 +28,7 @@ func (pg *Postgres) Init(ctx context.Context) error {
 		return nil
 	}
 
-	db, err := pgxpool.New(ctx, config.Options.DatabaseUri)
+	db, err := pgxpool.New(ctx, config.Options.DatabaseURI)
 	if err != nil {
 		panic(err)
 	}

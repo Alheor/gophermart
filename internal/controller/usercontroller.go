@@ -70,7 +70,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		&http.Cookie{
 			Name: auth.CookiesName,
 
-			Value: auth.PrepareCookie(user.Id),
+			Value: auth.PrepareCookie(user.ID),
 		},
 	)
 
@@ -82,7 +82,7 @@ func GetUserBalance(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
-	user, err := repository.GetUserRepository().GetUserById(ctx, user.Id)
+	user, err := repository.GetUserRepository().GetUserByID(ctx, user.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

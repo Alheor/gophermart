@@ -21,12 +21,7 @@ func Init() {
 		panic(err)
 	}
 
-	defer func(zl *zap.Logger) {
-		err := zl.Sync()
-		if err != nil {
-
-		}
-	}(zl)
+	defer zl.Sync()
 
 	logger = zl
 }

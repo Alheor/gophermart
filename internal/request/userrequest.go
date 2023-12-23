@@ -22,7 +22,7 @@ type LoginForm struct {
 }
 
 type UserOrderForm struct {
-	OrderId string `validate:"required,min=2"`
+	OrderID string `validate:"required,min=2"`
 }
 
 type UserWithdrawOrderForm struct {
@@ -90,18 +90,18 @@ func ParseAddUserOrderRequest(r *http.Request) (*UserOrderForm, *response.Error)
 	}
 
 	form := new(UserOrderForm)
-	form.OrderId = string(reqBody)
+	form.OrderID = string(reqBody)
 
 	err = getValidator().Struct(form)
 	if err != nil {
 		return nil, parseError(err)
 	}
 
-	if form.OrderId == `` {
+	if form.OrderID == `` {
 		return nil, &response.Error{Code: http.StatusBadRequest}
 	}
 
-	err = goluhn.Validate(form.OrderId)
+	err = goluhn.Validate(form.OrderID)
 	if err != nil {
 		return nil, &response.Error{Code: http.StatusUnprocessableEntity}
 	}

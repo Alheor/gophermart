@@ -14,15 +14,15 @@ const (
 	apiGetOrderDataPath = `/api/orders/`
 )
 
-type Api interface {
-	getOrderData(orderId string) error
+type API interface {
+	getOrderData(orderID string) error
 }
 
-type ApiConnector struct {
+type APIConnector struct {
 	client *http.Client
 }
 
-var connector *ApiConnector
+var connector *APIConnector
 
 func init() {
 	tr := &http.Transport{
@@ -31,19 +31,13 @@ func init() {
 		DisableCompression: true,
 	}
 
-	connector = new(ApiConnector)
+	connector = new(APIConnector)
 	connector.client = &http.Client{Transport: tr}
 }
 
-func (ac *ApiConnector) getOrderData(orderId string) (*entity.AccrualOrder, error) {
+func (ac *APIConnector) getOrderData(orderID string) (*entity.AccrualOrder, error) {
 
-	//body := []byte(`{
-	//   "order": "` + orderId + `",
-	//   "status": "PROCESSED",
-	//	"accrual": 1
-	//}`)
-
-	resp, err := connector.client.Get(config.Options.AccrualSystemAddress + apiGetOrderDataPath + orderId)
+	resp, err := connector.client.Get(config.Options.AccrualSystemAddress + apiGetOrderDataPath + orderID)
 	if err != nil {
 		return nil, err
 	}
@@ -55,6 +49,9 @@ func (ac *ApiConnector) getOrderData(orderId string) (*entity.AccrualOrder, erro
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	var el entity.AccrualOrder
 	err = json.Unmarshal(body, &el)

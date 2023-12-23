@@ -5,21 +5,21 @@ import (
 	"os"
 )
 
-const defaultAddr = `localhost:8081`
-const defaultDatabaseUri = `host=localhost port=5432 user=app password=pass dbname=gophermart sslmode=disable`
+const defaultAddr = `localhost:8080`
+const defaultDatabaseURL = `host=localhost port=5432 user=app password=pass dbname=gophermart sslmode=disable`
 const DefaultLSignatureKey = `ceecb67c69b7415c162dbcd83fddddf3`
 const defaultLogLevel = `debug`
-const defaultAccrualSystemAddress = `http://localhost:8080`
+const defaultAccrualSystemAddress = `http://localhost:8081`
 
 const envRunAddress = `RUN_ADDRESS`
-const envDatabaseUri = `DATABASE_URI`
+const envDatabaseURL = `DATABASE_URI`
 const envAccrualSystemAddress = `ACCRUAL_SYSTEM_ADDRESS`
 const envSignatureKey = `SIGNATURE_KEY`
 const envLogLevel = `LOG_LEVEl`
 
 var Options struct {
 	Addr                 string
-	DatabaseUri          string
+	DatabaseURI          string
 	LogLevel             string
 	AccrualSystemAddress string
 	SignatureKey         string
@@ -28,7 +28,7 @@ var Options struct {
 func init() {
 	flag.StringVar(&Options.Addr, `a`, defaultAddr, "listening host:port")
 	flag.StringVar(&Options.LogLevel, `l`, defaultLogLevel, "log handler level")
-	flag.StringVar(&Options.DatabaseUri, `d`, defaultDatabaseUri, "database uri")
+	flag.StringVar(&Options.DatabaseURI, `d`, defaultDatabaseURL, "database uri")
 	flag.StringVar(&Options.AccrualSystemAddress, `r`, defaultAccrualSystemAddress, "accrual system address")
 	flag.StringVar(&Options.SignatureKey, `k`, DefaultLSignatureKey, "signature secret key")
 }
@@ -41,9 +41,9 @@ func Load() {
 		Options.Addr = addr
 	}
 
-	DatabaseUri, exist := os.LookupEnv(envDatabaseUri)
+	DatabaseUri, exist := os.LookupEnv(envDatabaseURL)
 	if exist && len(DatabaseUri) > 0 {
-		Options.DatabaseUri = DatabaseUri
+		Options.DatabaseURI = DatabaseUri
 	}
 
 	AccrualSystemAddress, exist := os.LookupEnv(envAccrualSystemAddress)

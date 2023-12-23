@@ -43,17 +43,17 @@ func ParseCookie(cookie *http.Cookie) (int, error) {
 		return 0, errors.New(`invalid cookie`)
 	}
 
-	userId, err := strconv.Atoi(value)
+	userID, err := strconv.Atoi(value)
 	if err != nil {
 		return 0, errors.New(`invalid cookie`)
 	}
 
-	return userId, nil
+	return userID, nil
 }
 
-func PrepareCookie(userId int) string {
-	stringUserId := strconv.Itoa(userId)
-	cookieValue := string(GetSignature(stringUserId)) + stringUserId
+func PrepareCookie(userID int) string {
+	stringUserID := strconv.Itoa(userID)
+	cookieValue := string(GetSignature(stringUserID)) + stringUserID
 
 	return base64.StdEncoding.EncodeToString([]byte(cookieValue))
 }

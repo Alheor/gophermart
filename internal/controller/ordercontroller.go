@@ -27,7 +27,7 @@ func AddUserOrder(w http.ResponseWriter, r *http.Request) {
 
 	user := auth.GetUserFromContext(ctx)
 
-	err := repository.GetOrderRepository().AddOrder(ctx, user, form.OrderId)
+	err := repository.GetOrderRepository().AddOrder(ctx, user, form.OrderID)
 	if err != nil {
 
 		var errO *entity.UniqueErrByOrder
@@ -46,7 +46,7 @@ func AddUserOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accural.Sync(form.OrderId)
+	accural.Sync(form.OrderID)
 
 	w.WriteHeader(http.StatusAccepted)
 }

@@ -54,7 +54,7 @@ func WithUserAuth(f http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		userId, err := auth.ParseCookie(userCookie)
+		userID, err := auth.ParseCookie(userCookie)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
@@ -63,7 +63,7 @@ func WithUserAuth(f http.HandlerFunc) http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(r.Context(), 500*time.Millisecond)
 		defer cancel()
 
-		user, err := repository.GetUserRepository().GetUserById(ctx, userId)
+		user, err := repository.GetUserRepository().GetUserByID(ctx, userID)
 
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)

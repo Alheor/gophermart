@@ -24,7 +24,7 @@ type UserRepository struct {
 type UserRepo interface {
 	CreateUser(ctx context.Context, form *request.RegisterForm) error
 	FindUser(ctx context.Context, form *request.LoginForm) (*entity.User, error)
-	GetUserById(ctx context.Context, id int) (*entity.User, error)
+	GetUserByID(ctx context.Context, id int) (*entity.User, error)
 }
 
 func GetUserRepository() UserRepo {
@@ -68,7 +68,7 @@ func (ur *UserRepository) FindUser(ctx context.Context, form *request.LoginForm)
 		pgx.NamedArgs{"login": form.Login},
 	)
 
-	err := row.Scan(&user.Id, &user.Login, &password)
+	err := row.Scan(&user.ID, &user.Login, &password)
 	if err != nil {
 		return nil, err
 	}
@@ -81,17 +81,17 @@ func (ur *UserRepository) FindUser(ctx context.Context, form *request.LoginForm)
 	return &user, nil
 }
 
-func (ur *UserRepository) GetUserById(ctx context.Context, userId int) (*entity.User, error) {
+func (ur *UserRepository) GetUserByID(ctx context.Context, userID int) (*entity.User, error) {
 
 	var row pgx.Row
 	var user entity.User
 
 	row = ur.Conn.QueryRow(ctx,
 		`SELECT id, login, balance, withdrawn FROM "user" WHERE id=@id`,
-		pgx.NamedArgs{"id": userId},
+		pgx.NamedArgs{"id": userID},
 	)
 
-	err := row.Scan(&user.Id, &user.Login, &user.Balance, &user.Withdrawn)
+	err := row.Scan(&user.ID, &user.Login, &user.Balance, &user.Withdrawn)
 	if err != nil {
 		return nil, err
 	}

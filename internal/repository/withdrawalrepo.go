@@ -34,7 +34,7 @@ func (or *WithdrawalOrderRepository) AddWithdrawalOrder(ctx context.Context, use
 	var balance float32
 	row = or.Conn.QueryRow(ctx,
 		`SELECT balance FROM "user" WHERE id = @user_id FOR UPDATE`,
-		pgx.NamedArgs{"user_id": user.Id},
+		pgx.NamedArgs{"user_id": user.ID},
 	)
 
 	err = row.Scan(&balance)
@@ -58,7 +58,7 @@ func (or *WithdrawalOrderRepository) AddWithdrawalOrder(ctx context.Context, use
 
 	_, err = or.Conn.Exec(ctx,
 		`INSERT INTO "withdrawal" (user_id, order_number, amount) VALUES (@user_id, @order_number, @amount)`,
-		pgx.NamedArgs{"user_id": user.Id, "order_number": form.Order, "amount": form.Sum},
+		pgx.NamedArgs{"user_id": user.ID, "order_number": form.Order, "amount": form.Sum},
 	)
 
 	if err != nil {
@@ -72,7 +72,7 @@ func (or *WithdrawalOrderRepository) AddWithdrawalOrder(ctx context.Context, use
 
 	_, err = or.Conn.Exec(ctx,
 		`UPDATE "user" SET withdrawn = withdrawn + @sum, balance = balance - @sum WHERE id = @user_id;`,
-		pgx.NamedArgs{"sum": form.Sum, "user_id": user.Id},
+		pgx.NamedArgs{"sum": form.Sum, "user_id": user.ID},
 	)
 
 	if err != nil {
@@ -95,7 +95,7 @@ func (or *WithdrawalOrderRepository) AddWithdrawalOrder(ctx context.Context, use
 func (or *WithdrawalOrderRepository) GetWithdrawals(ctx context.Context, user *entity.User) ([]entity.WithdrawalOrder, error) {
 	rows, err := or.Conn.Query(ctx,
 		`SELECT created_at, order_number, amount FROM "withdrawal" WHERE user_id=@id ORDER BY created_at DESC`,
-		pgx.NamedArgs{"id": user.Id},
+		pgx.NamedArgs{"id": user.ID},
 	)
 
 	if err != nil {

@@ -38,8 +38,8 @@ type test struct {
 	want           want
 }
 
-var user1 = &entity.User{Id: 344}
-var user2 = &entity.User{Id: 345}
+var user1 = &entity.User{ID: 344}
+var user2 = &entity.User{ID: 345}
 
 func init() {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
@@ -273,7 +273,7 @@ func addUsersToDB(t *testing.T) {
 
 	_, err := repository.GetConnection().Conn.Exec(ctx,
 		`INSERT INTO "user" (id, login, pass, balance, withdrawn) VALUES (@id1, @login1, @pass1, @balance1, @withdrawn1),(@id2, @login2, @pass2, @balance2, @withdrawn2)`,
-		pgx.NamedArgs{"id1": user1.Id, "login1": `test1`, "pass1": `test1`, "balance1": 13.4, "withdrawn1": 11.2, "id2": user2.Id, "login2": `test2`, "pass2": `test2`, "balance2": 130, "withdrawn2": 50},
+		pgx.NamedArgs{"id1": user1.ID, "login1": `test1`, "pass1": `test1`, "balance1": 13.4, "withdrawn1": 11.2, "id2": user2.ID, "login2": `test2`, "pass2": `test2`, "balance2": 130, "withdrawn2": 50},
 	)
 
 	require.NoError(t, err)
@@ -333,7 +333,7 @@ func runTests(t *testing.T, tests []test) {
 }
 
 func prepareCookie(user *entity.User) *http.Cookie {
-	cookiesValue := auth.PrepareCookie(user.Id)
+	cookiesValue := auth.PrepareCookie(user.ID)
 
 	return &http.Cookie{
 		Name:  auth.CookiesName,

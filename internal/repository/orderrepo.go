@@ -30,7 +30,7 @@ func GetOrderRepository() OrderRepo {
 func (or *OrderRepository) AddOrder(ctx context.Context, user *entity.User, orderNumber string) error {
 	_, err := or.Conn.Exec(ctx,
 		`INSERT INTO "order" (user_id, order_number) VALUES (@user_id, @order_number)`,
-		pgx.NamedArgs{"user_id": user.Id, "order_number": orderNumber},
+		pgx.NamedArgs{"user_id": user.ID, "order_number": orderNumber},
 	)
 
 	if err == nil {
@@ -56,7 +56,7 @@ func (or *OrderRepository) GetOrders(ctx context.Context, user *entity.User) ([]
 
 	rows, err := or.Conn.Query(ctx,
 		`SELECT created_at, order_number, status, accrual FROM "order" WHERE user_id=@id`,
-		pgx.NamedArgs{"id": user.Id},
+		pgx.NamedArgs{"id": user.ID},
 	)
 
 	if err != nil {
