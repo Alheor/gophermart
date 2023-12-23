@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/Alheor/gophermart/internal/entity"
+	"github.com/Alheor/gophermart/internal/logger"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -122,6 +123,8 @@ func (or *OrderRepository) ChangeOrder(ctx context.Context, order *entity.Accrua
 
 	tx, err := or.Conn.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
+
+		logger.GetLogger().Error(`Change order error1: ` + err.Error())
 		return err
 	}
 
@@ -134,9 +137,11 @@ func (or *OrderRepository) ChangeOrder(ctx context.Context, order *entity.Accrua
 		if err != nil {
 			err = tx.Rollback(ctx)
 			if err != nil {
+				logger.GetLogger().Error(`Change order error2: ` + err.Error())
 				return err
 			}
 
+			logger.GetLogger().Error(`Change order error3: ` + err.Error())
 			return err
 		}
 
@@ -152,9 +157,11 @@ func (or *OrderRepository) ChangeOrder(ctx context.Context, order *entity.Accrua
 		if err != nil {
 			err = tx.Rollback(ctx)
 			if err != nil {
+				logger.GetLogger().Error(`Change order error4: ` + err.Error())
 				return err
 			}
 
+			logger.GetLogger().Error(`Change order error5: ` + err.Error())
 			return err
 		}
 
@@ -167,9 +174,10 @@ func (or *OrderRepository) ChangeOrder(ctx context.Context, order *entity.Accrua
 		if err != nil {
 			err = tx.Rollback(ctx)
 			if err != nil {
+				logger.GetLogger().Error(`Change order error6: ` + err.Error())
 				return err
 			}
-
+			logger.GetLogger().Error(`Change order error7: ` + err.Error())
 			return err
 		}
 	}

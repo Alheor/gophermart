@@ -7,6 +7,7 @@ import (
 	"github.com/Alheor/gophermart/internal/entity"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -43,7 +44,7 @@ func (ac *APIConnector) getOrderData(orderID string) (*entity.AccrualOrder, erro
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New(``)
+		return nil, errors.New(`accural response status code: ` + strconv.Itoa(resp.StatusCode))
 	}
 
 	defer resp.Body.Close()

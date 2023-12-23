@@ -48,11 +48,12 @@ func Sync(orderID string) {
 }
 
 func syncOrder(ctx context.Context, orderID string) {
-	data, err := connector.getOrderData(orderID)
 
+	data, err := connector.getOrderData(orderID)
 	if err != nil {
 		logger.GetLogger().Error(`Order sync error: ` + err.Error())
 		ss.SyncChan <- orderID
+		ctx.Done()
 		return
 	}
 
