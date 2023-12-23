@@ -28,7 +28,7 @@ func Init() {
 		for {
 			s := <-ss.SyncChan
 
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			cancel()
 
 			go syncOrder(ctx, s)

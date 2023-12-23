@@ -54,7 +54,7 @@ func AddUserOrder(w http.ResponseWriter, r *http.Request) {
 
 func GetUserOrders(w http.ResponseWriter, r *http.Request) {
 
-	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
