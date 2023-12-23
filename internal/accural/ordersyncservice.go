@@ -28,9 +28,9 @@ func Init() {
 		for {
 			s := <-ss.SyncChan
 
-			ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
-			go syncOrder(ctx, s)
+			go syncOrder(ctx, s, cancel)
 
 			time.Sleep(1 * time.Second)
 		}
@@ -46,7 +46,9 @@ func Sync(orderID string) {
 	ss.SyncChan <- orderID
 }
 
-func syncOrder(ctx context.Context, orderID string) {
+func syncOrder(ctx context.Context, orderID string, cancel context.CancelFunc) {
+
+	defer cancel()
 
 	data, err := connector.getOrderData(orderID)
 	if err != nil {

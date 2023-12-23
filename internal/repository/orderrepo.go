@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/Alheor/gophermart/internal/entity"
-	"github.com/Alheor/gophermart/internal/logger"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -123,7 +122,6 @@ func (or *OrderRepository) ChangeOrder(ctx context.Context, order *entity.Accrua
 
 	tx, err := or.Conn.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
-		logger.GetLogger().Error(`Change order error1: ` + err.Error())
 		return err
 	}
 
