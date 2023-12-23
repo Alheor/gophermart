@@ -61,6 +61,7 @@ func syncOrder(ctx context.Context, orderID string) {
 
 	err = repository.GetOrderRepository().ChangeOrder(ctx, data)
 	if err != nil {
+		logger.GetLogger().Error(`Change order error: ` + err.Error())
 		ss.SyncChan <- orderID
 	}
 }
