@@ -28,7 +28,7 @@ func Init() {
 		for {
 			s := <-ss.SyncChan
 
-			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			cancel()
 
 			go syncOrder(ctx, s)
@@ -52,8 +52,12 @@ func syncOrder(ctx context.Context, orderID string) {
 	data, err := connector.getOrderData(orderID)
 	if err != nil {
 		logger.GetLogger().Error(`Order sync error: ` + err.Error())
+
 		ss.SyncChan <- orderID
-		ctx.Done()
+		return
+	}
+
+	if data == nil {
 		return
 	}
 

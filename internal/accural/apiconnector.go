@@ -43,6 +43,10 @@ func (ac *APIConnector) getOrderData(orderID string) (*entity.AccrualOrder, erro
 		return nil, err
 	}
 
+	if resp.StatusCode == http.StatusNoContent {
+		return nil, nil
+	}
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New(`accural response status code: ` + strconv.Itoa(resp.StatusCode))
 	}
