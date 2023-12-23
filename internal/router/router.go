@@ -20,8 +20,8 @@ func Init() *chi.Mux {
 }
 
 func prepareRoutes(r *chi.Mux) {
-	r.Post("/api/auth/register", middlewareConveyor(controller.RegisterUser))
-	r.Post("/api/auth/login", middlewareConveyor(controller.LoginUser))
+	r.Post("/api/user/register", middlewareConveyor(controller.RegisterUser))
+	r.Post("/api/user/login", middlewareConveyor(controller.LoginUser))
 	r.Post("/api/user/orders", middlewareConveyor(controller.AddUserOrder, WithUserAuth))
 	r.Get("/api/user/orders", middlewareConveyor(controller.GetUserOrders, WithUserAuth))
 	r.Get("/api/user/balance", middlewareConveyor(controller.GetUserBalance, WithUserAuth))

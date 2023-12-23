@@ -60,7 +60,7 @@ func TestCreateUser(t *testing.T) {
 	tests := []test{
 		{
 			name:        `positive test: register auth POST`,
-			requestURL:  `/api/auth/register`,
+			requestURL:  `/api/user/register`,
 			requestBody: []byte(`{"login": "test", "password":"password"}`),
 			method:      http.MethodPost,
 			want: want{
@@ -68,7 +68,7 @@ func TestCreateUser(t *testing.T) {
 			},
 		}, {
 			name:        `negative test: register auth POST`,
-			requestURL:  `/api/auth/register`,
+			requestURL:  `/api/user/register`,
 			requestBody: []byte(`{"login": "test", "password":"password1"}`),
 			method:      http.MethodPost,
 			want: want{
@@ -89,7 +89,7 @@ func TestLogin(t *testing.T) {
 	tests := []test{
 		{
 			name:        `positive test: register auth POST`,
-			requestURL:  `/api/auth/register`,
+			requestURL:  `/api/user/register`,
 			requestBody: []byte(`{"login": "test", "password":"password"}`),
 			method:      http.MethodPost,
 			want: want{
@@ -97,7 +97,7 @@ func TestLogin(t *testing.T) {
 			},
 		}, {
 			name:        `positive test: login auth POST`,
-			requestURL:  `/api/auth/login`,
+			requestURL:  `/api/user/login`,
 			requestBody: []byte(`{"login": "test", "password":"password"}`),
 			method:      http.MethodPost,
 			want: want{
@@ -106,7 +106,7 @@ func TestLogin(t *testing.T) {
 			},
 		}, {
 			name:        `negative test: login auth POST`,
-			requestURL:  `/api/auth/login`,
+			requestURL:  `/api/user/login`,
 			requestBody: []byte(`{"login": "test", "password":"password1"}`),
 			method:      http.MethodPost,
 			want: want{
