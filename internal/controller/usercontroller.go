@@ -23,7 +23,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 1*time.Second)
 	defer cancel()
 
-	repErr := repository.GetUserRepository().CreateUser(ctx, form)
+	user, repErr := repository.GetUserRepository().CreateUser(ctx, form)
 	if repErr != nil {
 
 		var uErr *repository.UniqueErr
@@ -40,6 +40,14 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+
+	http.SetCookie(w,
+		&http.Cookie{
+			Name: auth.CookiesName,
+
+			Value: auth.PrepareCookie(user.ID),
+		},
+	)
 
 	w.WriteHeader(http.StatusOK)
 }

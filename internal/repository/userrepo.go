@@ -22,7 +22,7 @@ type UserRepository struct {
 }
 
 type UserRepo interface {
-	CreateUser(ctx context.Context, form *request.RegisterForm) error
+	CreateUser(ctx context.Context, form *request.RegisterForm) (*entity.User, error)
 	FindUser(ctx context.Context, form *request.LoginForm) (*entity.User, error)
 	GetUserByID(ctx context.Context, id int) (*entity.User, error)
 }
@@ -33,11 +33,11 @@ func GetUserRepository() UserRepo {
 	return ur
 }
 
-func (ur *UserRepository) CreateUser(ctx context.Context, form *request.RegisterForm) error {
+func (ur *UserRepository) CreateUser(ctx context.Context, form *request.RegisterForm) (*entity.User, error) {
 
 	passHash, err := getPasswordHash(form.Password)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = ur.Conn.Exec(ctx,
@@ -45,16 +45,28 @@ func (ur *UserRepository) CreateUser(ctx context.Context, form *request.Register
 		pgx.NamedArgs{"login": form.Login, "pass": passHash},
 	)
 
-	if err == nil {
-		return nil
+	if err != nil {
+		var myErr *pgconn.PgError
+		if errors.As(err, &myErr) && myErr.Code == pgerrcode.UniqueViolation {
+			return nil, &UniqueErr{}
+		}
+
+		return nil, err
 	}
 
-	var myErr *pgconn.PgError
-	if errors.As(err, &myErr) && myErr.Code == pgerrcode.UniqueViolation {
-		return &UniqueErr{}
+	var user entity.User
+
+	row := ur.Conn.QueryRow(ctx,
+		`SELECT id FROM "user" WHERE login=@login AND pass=@pass`,
+		pgx.NamedArgs{"login": form.Login, "pass": passHash},
+	)
+
+	err = row.Scan(&user.ID)
+	if err != nil {
+		return nil, err
 	}
 
-	return err
+	return &user, nil
 }
 
 func (ur *UserRepository) FindUser(ctx context.Context, form *request.LoginForm) (*entity.User, error) {

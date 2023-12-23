@@ -64,7 +64,8 @@ func TestCreateUser(t *testing.T) {
 			requestBody: []byte(`{"login": "test", "password":"password"}`),
 			method:      http.MethodPost,
 			want: want{
-				code: http.StatusOK,
+				code:       http.StatusOK,
+				cookieName: auth.CookiesName,
 			},
 		}, {
 			name:        `negative test: register auth POST`,

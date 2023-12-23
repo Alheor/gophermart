@@ -41,9 +41,9 @@ func Load() {
 		Options.Addr = addr
 	}
 
-	DatabaseUri, exist := os.LookupEnv(envDatabaseURL)
-	if exist && len(DatabaseUri) > 0 {
-		Options.DatabaseURI = DatabaseUri
+	DatabaseURI, exist := os.LookupEnv(envDatabaseURL)
+	if exist && len(DatabaseURI) > 0 {
+		Options.DatabaseURI = DatabaseURI
 	}
 
 	AccrualSystemAddress, exist := os.LookupEnv(envAccrualSystemAddress)
