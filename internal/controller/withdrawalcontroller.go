@@ -61,6 +61,8 @@ func GetUserWithdrawals(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set(response.HeaderContentTypeName, response.HeaderContentTypeJSONValue)
+
 	_, err = w.Write(rawByte)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

@@ -48,6 +48,7 @@ func AddUserOrder(w http.ResponseWriter, r *http.Request) {
 
 	accural.Sync(form.OrderID)
 
+	w.Header().Set(response.HeaderContentTypeName, response.HeaderContentTypeJSONValue)
 	w.WriteHeader(http.StatusAccepted)
 }
 
@@ -74,6 +75,8 @@ func GetUserOrders(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set(response.HeaderContentTypeName, response.HeaderContentTypeJSONValue)
 
 	_, err = w.Write(rawByte)
 	if err != nil {
