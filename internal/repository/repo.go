@@ -33,8 +33,6 @@ func (pg *Postgres) Init(ctx context.Context) error {
 		panic(err)
 	}
 
-	defer db.Close()
-
 	pg.Conn = db
 
 	createDBSchema(ctx, pg.Conn)
