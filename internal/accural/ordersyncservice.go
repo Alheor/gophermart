@@ -28,9 +28,7 @@ func Init() {
 		for {
 			s := <-ss.SyncChan
 
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-
-			go syncOrder(ctx, s, cancel)
+			go syncOrder(s)
 
 			time.Sleep(1 * time.Second)
 		}
@@ -46,9 +44,7 @@ func Sync(orderID string) {
 	ss.SyncChan <- orderID
 }
 
-func syncOrder(ctx context.Context, orderID string, cancel context.CancelFunc) {
-
-	defer cancel()
+func syncOrder(orderID string) {
 
 	data, err := connector.getOrderData(orderID)
 	if err != nil {
@@ -65,6 +61,9 @@ func syncOrder(ctx context.Context, orderID string, cancel context.CancelFunc) {
 	if data.Status != StatusProcessed && data.Status != StatusInvalid {
 		ss.SyncChan <- orderID
 	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
 	err = repository.GetOrderRepository().ChangeOrder(ctx, data)
 	if err != nil {
