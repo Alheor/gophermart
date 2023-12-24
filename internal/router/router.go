@@ -60,7 +60,7 @@ func WithUserAuth(f http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		ctx, cancel := context.WithTimeout(r.Context(), 500*time.Millisecond)
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 
 		user, err := repository.GetUserRepository().GetUserByID(ctx, userID)

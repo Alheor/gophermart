@@ -62,7 +62,7 @@ func syncOrder(orderID string) {
 		ss.SyncChan <- orderID
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	err = repository.GetOrderRepository().ChangeOrder(ctx, data)
