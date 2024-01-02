@@ -1,0 +1,117 @@
+package controller
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"net/http"
+	"time"
+
+	"github.com/Alheor/gophermart/internal/auth"
+	"github.com/Alheor/gophermart/internal/repository"
+	"github.com/Alheor/gophermart/internal/request"
+	"github.com/Alheor/gophermart/internal/response"
+)
+
+func RegisterUser(w http.ResponseWriter, r *http.Request) {
+
+	form, err := request.ParseRegisterRequest(r)
+	if err != nil {
+		response.SendErrorResponse(w, err)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	user, repErr := repository.GetUserRepository().CreateUser(ctx, form)
+	if repErr != nil {
+
+		var uErr *repository.UniqueErr
+		if errors.As(repErr, &uErr) {
+			response.SendErrorResponse(w,
+				&response.Error{Field: `login`, Mess: repository.ErrUserAlreadyExist, Code: http.StatusConflict},
+			)
+			return
+		}
+
+		response.SendErrorResponse(w,
+			&response.Error{Field: `login`, Mess: repErr.Error(), Code: http.StatusInternalServerError},
+		)
+
+		return
+	}
+
+	http.SetCookie(w,
+		&http.Cookie{
+			Name: auth.CookiesName,
+
+			Value: auth.PrepareCookie(user.ID),
+		},
+	)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+
+	form, reqErr := request.ParseLoginRequest(r)
+	if reqErr != nil {
+		response.SendErrorResponse(w, reqErr)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	user, queryErr := repository.GetUserRepository().FindUser(ctx, form)
+	if queryErr != nil {
+		http.Error(w, queryErr.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	http.SetCookie(w,
+		&http.Cookie{
+			Name: auth.CookiesName,
+
+			Value: auth.PrepareCookie(user.ID),
+		},
+	)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func GetUserBalance(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	user := auth.GetUserFromContext(ctx)
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	user, err := repository.GetUserRepository().GetUserByID(ctx, user.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rawByte, err := json.Marshal(user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set(response.HeaderContentTypeName, response.HeaderContentTypeJSONValue)
+
+	_, err = w.Write(rawByte)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
