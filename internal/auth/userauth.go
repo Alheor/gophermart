@@ -6,10 +6,11 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
-	"github.com/Alheor/gophermart/internal/config"
-	"github.com/Alheor/gophermart/internal/entity"
 	"net/http"
 	"strconv"
+
+	"github.com/Alheor/gophermart/internal/config"
+	"github.com/Alheor/gophermart/internal/entity"
 )
 
 type contextKey string
@@ -62,7 +63,7 @@ func GetUserFromContext(ctx context.Context) *entity.User {
 
 	authUser := ctx.Value(ContextValueName)
 	if authUser == nil {
-		panic(errors.New(`user not exist`))
+		return nil
 	}
 
 	return authUser.(*entity.User)

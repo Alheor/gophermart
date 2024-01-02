@@ -2,14 +2,16 @@ package accural
 
 import (
 	"context"
-	"github.com/Alheor/gophermart/internal/logger"
-	"github.com/Alheor/gophermart/internal/repository"
 	"strconv"
 	"time"
+
+	"github.com/Alheor/gophermart/internal/logger"
+	"github.com/Alheor/gophermart/internal/repository"
 )
 
 type SyncService struct {
 	SyncChan chan string
+	ErrChan  chan error
 }
 
 var ss *SyncService
@@ -19,23 +21,28 @@ const (
 	StatusInvalid   = `INVALID`
 )
 
-func Init() {
+func Init(ctx context.Context) {
 
-	ss = &SyncService{SyncChan: make(chan string)}
+	InitConnector()
+
+	ss = &SyncService{SyncChan: make(chan string), ErrChan: make(chan error)}
 
 	go func() {
-
 		for {
 			s := <-ss.SyncChan
 
-			go syncOrder(s)
+			go syncOrder(ctx, s)
 
 			time.Sleep(1 * time.Second)
 		}
 	}()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	go func() {
+		for {
+			err := <-ss.ErrChan
+			handleError(err)
+		}
+	}()
 
 	loadFromBD(ctx)
 }
@@ -44,12 +51,12 @@ func Sync(orderID string) {
 	ss.SyncChan <- orderID
 }
 
-func syncOrder(orderID string) {
+func syncOrder(ctx context.Context, orderID string) {
 
 	data, err := connector.getOrderData(orderID)
 	if err != nil {
 		logger.GetLogger().Error(`Order sync error: ` + err.Error())
-
+		ss.ErrChan <- err
 		ss.SyncChan <- orderID
 		return
 	}
@@ -62,14 +69,16 @@ func syncOrder(orderID string) {
 		ss.SyncChan <- orderID
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
 	err = repository.GetOrderRepository().ChangeOrder(ctx, data)
 	if err != nil {
 		logger.GetLogger().Error(`Change order error: ` + err.Error())
+		ss.ErrChan <- err
 		ss.SyncChan <- orderID
 	}
+}
+
+func handleError(err error) {
+	logger.GetLogger().Error(err.Error())
 }
 
 func loadFromBD(ctx context.Context) {
@@ -77,7 +86,9 @@ func loadFromBD(ctx context.Context) {
 
 	list, err := repository.GetOrderRepository().GetOrderForProcessing(ctx)
 	if err != nil {
-		panic(err)
+		logger.GetLogger().Error(`Error load orders from DB: ` + err.Error())
+		ss.ErrChan <- err
+		return
 	}
 
 	for _, order := range list {

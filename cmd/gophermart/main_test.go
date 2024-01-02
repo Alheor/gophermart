@@ -3,6 +3,16 @@ package main
 import (
 	"bytes"
 	"context"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	"time"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/Alheor/gophermart/internal/accural"
 	"github.com/Alheor/gophermart/internal/auth"
 	"github.com/Alheor/gophermart/internal/config"
@@ -10,14 +20,6 @@ import (
 	"github.com/Alheor/gophermart/internal/logger"
 	"github.com/Alheor/gophermart/internal/repository"
 	"github.com/Alheor/gophermart/internal/router"
-	"github.com/jackc/pgx/v5"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-	"time"
 )
 
 type want struct {
@@ -126,7 +128,10 @@ func TestAddOrder(t *testing.T) {
 	prepareDB(t)
 	addUsersToDB(t)
 
-	accural.Init()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	accural.Init(ctx)
 
 	tests := []test{
 		{

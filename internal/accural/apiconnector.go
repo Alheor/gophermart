@@ -3,12 +3,13 @@ package accural
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Alheor/gophermart/internal/config"
-	"github.com/Alheor/gophermart/internal/entity"
 	"io"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/Alheor/gophermart/internal/config"
+	"github.com/Alheor/gophermart/internal/entity"
 )
 
 const (
@@ -25,7 +26,7 @@ type APIConnector struct {
 
 var connector *APIConnector
 
-func init() {
+func InitConnector() {
 	tr := &http.Transport{
 		MaxIdleConns:       10,
 		IdleConnTimeout:    3 * time.Second,

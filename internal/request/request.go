@@ -3,12 +3,14 @@ package request
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Alheor/gophermart/internal/response"
-	"github.com/ShiraazMoollatjie/goluhn"
-	"github.com/go-playground/validator/v10"
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/ShiraazMoollatjie/goluhn"
+	"github.com/go-playground/validator/v10"
+
+	"github.com/Alheor/gophermart/internal/response"
 )
 
 type RegisterForm struct {

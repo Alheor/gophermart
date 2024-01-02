@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"time"
+
 	"github.com/Alheor/gophermart/internal/auth"
 	"github.com/Alheor/gophermart/internal/repository"
 	"github.com/Alheor/gophermart/internal/request"
 	"github.com/Alheor/gophermart/internal/response"
-	"net/http"
-	"time"
 )
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
@@ -90,6 +91,11 @@ func GetUserBalance(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	user, err := repository.GetUserRepository().GetUserByID(ctx, user.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

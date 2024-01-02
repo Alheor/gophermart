@@ -3,13 +3,15 @@ package repository
 import (
 	"context"
 	"errors"
-	"github.com/Alheor/gophermart/internal/entity"
-	"github.com/Alheor/gophermart/internal/request"
+
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/Alheor/gophermart/internal/entity"
+	"github.com/Alheor/gophermart/internal/request"
 )
 
 const (

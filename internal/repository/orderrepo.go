@@ -3,11 +3,13 @@ package repository
 import (
 	"context"
 	"errors"
-	"github.com/Alheor/gophermart/internal/entity"
+
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/Alheor/gophermart/internal/entity"
 )
 
 type OrderRepo interface {

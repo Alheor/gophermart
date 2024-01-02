@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
-	"github.com/Alheor/gophermart/internal/config"
+
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/Alheor/gophermart/internal/config"
 )
 
 const (

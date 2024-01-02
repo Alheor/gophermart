@@ -2,8 +2,9 @@ package response
 
 import (
 	"encoding/json"
-	"github.com/Alheor/gophermart/internal/logger"
 	"net/http"
+
+	"github.com/Alheor/gophermart/internal/logger"
 )
 
 const (
@@ -27,7 +28,7 @@ func SendErrorResponse(w http.ResponseWriter, error *Error) {
 
 	rawByte, err := json.Marshal(error)
 	if err != nil {
-		logger.GetLogger().Panic(err.Error())
+		logger.GetLogger().Panic(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
@@ -37,7 +38,7 @@ func SendErrorResponse(w http.ResponseWriter, error *Error) {
 
 	_, err = w.Write(rawByte)
 	if err != nil {
-		logger.GetLogger().Panic(err.Error())
+		logger.GetLogger().Panic(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return

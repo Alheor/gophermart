@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"time"
+
 	"github.com/Alheor/gophermart/internal/accural"
 	"github.com/Alheor/gophermart/internal/auth"
 	"github.com/Alheor/gophermart/internal/entity"
@@ -11,8 +14,6 @@ import (
 	"github.com/Alheor/gophermart/internal/repository"
 	"github.com/Alheor/gophermart/internal/request"
 	"github.com/Alheor/gophermart/internal/response"
-	"net/http"
-	"time"
 )
 
 func AddUserOrder(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +28,10 @@ func AddUserOrder(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	err := repository.GetOrderRepository().AddOrder(ctx, user, form.OrderID)
 	if err != nil {
@@ -59,6 +64,10 @@ func GetUserOrders(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	list, err := repository.GetOrderRepository().GetOrders(ctx, user)
 	if err != nil {

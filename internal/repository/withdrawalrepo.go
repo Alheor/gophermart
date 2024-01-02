@@ -2,10 +2,12 @@ package repository
 
 import (
 	"context"
-	"github.com/Alheor/gophermart/internal/entity"
-	"github.com/Alheor/gophermart/internal/request"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/Alheor/gophermart/internal/entity"
+	"github.com/Alheor/gophermart/internal/request"
 )
 
 type WithdrawalOrderRepo interface {

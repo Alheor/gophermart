@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"time"
+
 	"github.com/Alheor/gophermart/internal/auth"
 	"github.com/Alheor/gophermart/internal/entity"
 	"github.com/Alheor/gophermart/internal/repository"
 	"github.com/Alheor/gophermart/internal/request"
 	"github.com/Alheor/gophermart/internal/response"
-	"net/http"
-	"time"
 )
 
 func AddWithdrawOrder(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +25,11 @@ func AddWithdrawOrder(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	err := repository.GetWithdrawalOrderRepository().AddWithdrawalOrder(ctx, user, form)
 	if err != nil {
 
@@ -43,6 +49,11 @@ func GetUserWithdrawals(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	user := auth.GetUserFromContext(ctx)
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	list, err := repository.GetWithdrawalOrderRepository().GetWithdrawals(ctx, user)
 
 	if err != nil {

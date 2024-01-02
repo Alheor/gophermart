@@ -2,12 +2,14 @@ package router
 
 import (
 	"context"
+	"net/http"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+
 	"github.com/Alheor/gophermart/internal/auth"
 	"github.com/Alheor/gophermart/internal/controller"
 	"github.com/Alheor/gophermart/internal/repository"
-	"github.com/go-chi/chi/v5"
-	"net/http"
-	"time"
 )
 
 type HTTPMiddleware func(f http.HandlerFunc) http.HandlerFunc
