@@ -1,3 +1,3 @@
 module github.com/Alheor/gophermart
 
-go 1.24.0
+go 1.23.8
