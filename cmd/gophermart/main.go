@@ -51,7 +51,7 @@ func main() {
 		logger.Fatal(`Signature key is empty`, nil)
 	}
 
-	err = repository.Init(ctx, cfg.DatabaseUri)
+	err = repository.Init(ctx, cfg.DatabaseURI)
 	if err != nil {
 		logger.Fatal(`repository init error`, nil)
 	}

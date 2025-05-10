@@ -90,8 +90,7 @@ func GetSignature(id string) []byte {
 func AddCookieToNewUser(resp http.ResponseWriter, user *models.User) {
 	id := strconv.Itoa(user.ID)
 
-	userCookie := &models.UserCookie{User: *user, Sign: GetSignature(id)}
-	cookieValue := string(userCookie.Sign) + id
+	cookieValue := string(GetSignature(id)) + id
 
 	http.SetCookie(resp,
 		&http.Cookie{

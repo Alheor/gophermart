@@ -45,9 +45,7 @@ func Init() error {
 		return nil
 	}
 
-	var config zap.Config
-
-	config = zap.NewProductionConfig()
+	config := zap.NewProductionConfig()
 	config.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.RFC3339)
 
 	var err error

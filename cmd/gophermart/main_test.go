@@ -54,7 +54,7 @@ func TestCreateUser(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = repository.Init(ctx, cfg.DatabaseUri)
+	err = repository.Init(ctx, cfg.DatabaseURI)
 	assert.NoError(t, err)
 
 	prepareDB(t)
@@ -91,7 +91,7 @@ func TestLogin(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = repository.Init(ctx, cfg.DatabaseUri)
+	err = repository.Init(ctx, cfg.DatabaseURI)
 	assert.NoError(t, err)
 
 	prepareDB(t)
@@ -136,7 +136,7 @@ func TestAddOrder(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = repository.Init(ctx, cfg.DatabaseUri)
+	err = repository.Init(ctx, cfg.DatabaseURI)
 	assert.NoError(t, err)
 
 	prepareDB(t)
@@ -213,7 +213,7 @@ func TestGetOrder(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = repository.Init(ctx, cfg.DatabaseUri)
+	err = repository.Init(ctx, cfg.DatabaseURI)
 	assert.NoError(t, err)
 
 	prepareDB(t)
@@ -255,7 +255,7 @@ func TestGetUserBalance(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = repository.Init(ctx, cfg.DatabaseUri)
+	err = repository.Init(ctx, cfg.DatabaseURI)
 	assert.NoError(t, err)
 
 	prepareDB(t)
@@ -285,7 +285,7 @@ func TestAddWithdrawOrder(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = repository.Init(ctx, cfg.DatabaseUri)
+	err = repository.Init(ctx, cfg.DatabaseURI)
 	assert.NoError(t, err)
 
 	prepareDB(t)

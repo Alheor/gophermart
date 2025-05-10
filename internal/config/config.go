@@ -12,7 +12,7 @@ const DefaultLSignatureKey = `40d40c8d1b5fff17e7edcabc6b2fa4ab`
 
 type Options struct {
 	RunAddr      string `env:"RUN_ADDRESS"`
-	DatabaseUri  string `env:"DATABASE_URI"`
+	DatabaseURI  string `env:"DATABASE_URI"`
 	AccrualAddr  string `env:"ACCRUAL_SYSTEM_ADDRESS"`
 	SignatureKey string `env:"SIGNATURE_KEY"`
 }
@@ -21,7 +21,7 @@ var options Options
 
 func init() {
 	flag.StringVar(&options.RunAddr, `a`, `localhost:8080`, "listen host/ip:port")
-	flag.StringVar(&options.DatabaseUri, `d`, ``, "database dsn")
+	flag.StringVar(&options.DatabaseURI, `d`, ``, "database dsn")
 	flag.StringVar(&options.AccrualAddr, `b`, `http://localhost:8080`, "accrual system address")
 	flag.StringVar(&options.SignatureKey, `k`, DefaultLSignatureKey, "signature key")
 }
@@ -38,7 +38,7 @@ func Load() Options {
 	println(`--- Loaded configuration ---`)
 
 	println(`listen: ` + options.RunAddr)
-	println(`database uri: ` + options.DatabaseUri)
+	println(`database uri: ` + options.DatabaseURI)
 	println(`accrual system address: ` + options.AccrualAddr)
 
 	if options.SignatureKey == DefaultLSignatureKey {
